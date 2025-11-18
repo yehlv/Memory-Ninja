@@ -1,0 +1,340 @@
+/**
+ * Memory Ninja - 水果忍者完整视觉效果
+ * 真实的 3D 水果、物理动画、切割特效
+ */
+
+/* ======================
+   Canvas 切割轨迹
+   ====================== */
+.ninja-slice-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 2147483647;
+}
+
+/* ======================
+   水果容器
+   ====================== */
+.ninja-fruit-container {
+  position: fixed;
+  z-index: 2147483645;
+  pointer-events: none;
+}
+
+/* ======================
+   水果主体（150px 大号）
+   ====================== */
+.ninja-fruit {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* 水果阴影 */
+.fruit-shadow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.15) 40%,
+    transparent 70%
+  );
+  filter: blur(8px);
+  transform: translateY(10px) scaleX(1.2);
+  z-index: -1;
+}
+
+/* 水果身体 */
+.fruit-body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 255, 0.3),
+    transparent 60%
+  );
+}
+
+/* 水果 emoji（超大号）*/
+.fruit-emoji {
+  font-size: 120px;
+  line-height: 1;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+  user-select: none;
+}
+
+/* 水果高光（3D 效果）*/
+.fruit-shine {
+  position: absolute;
+  top: 10%;
+  left: 15%;
+  width: 40%;
+  height: 40%;
+  background: radial-gradient(
+    circle at top left,
+    rgba(255, 255, 255, 0.6) 0%,
+    rgba(255, 255, 255, 0.3) 30%,
+    transparent 60%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* 水果信息标签 */
+.fruit-info-badge {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Arial, sans-serif;
+}
+
+.fruit-title {
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.fruit-memory {
+  color: #FFB84D;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+/* ======================
+   切割闪光特效
+   ====================== */
+.ninja-slash-effect {
+  position: fixed;
+  width: 200px;
+  height: 6px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 1) 20%,
+    rgba(255, 255, 255, 1) 80%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 20px rgba(255, 255, 255, 1),
+    0 0 40px rgba(100, 200, 255, 0.8),
+    0 0 60px rgba(100, 200, 255, 0.4);
+  z-index: 2147483646;
+  pointer-events: none;
+  animation: slashFlash 0.3s ease-out forwards;
+  transform-origin: center;
+}
+
+@keyframes slashFlash {
+  0% {
+    opacity: 1;
+    transform: scaleX(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1.2);
+  }
+}
+
+/* ======================
+   水果切半效果
+   ====================== */
+.ninja-fruit-half {
+  position: fixed;
+  z-index: 2147483644;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ninja-fruit-half .fruit-emoji {
+  font-size: 120px;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+}
+
+/* ======================
+   果汁粒子
+   ====================== */
+.ninja-juice-particle {
+  position: fixed;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  z-index: 2147483643;
+  pointer-events: none;
+  box-shadow:
+    0 0 8px currentColor,
+    0 0 16px currentColor;
+}
+
+/* ======================
+   得分文字
+   ====================== */
+.ninja-score-text {
+  position: fixed;
+  z-index: 2147483648;
+  font-size: 48px;
+  font-weight: 900;
+  color: #FFD700;
+  text-shadow:
+    0 0 20px rgba(255, 215, 0, 1),
+    0 0 40px rgba(255, 215, 0, 0.8),
+    0 0 60px rgba(255, 215, 0, 0.4),
+    4px 4px 8px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-50%);
+  transition: all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Arial, sans-serif;
+  letter-spacing: 2px;
+}
+
+/* ======================
+   响应式和性能优化
+   ====================== */
+.ninja-fruit-container,
+.ninja-fruit,
+.ninja-fruit-half,
+.ninja-juice-particle,
+.ninja-score-text,
+.ninja-slash-effect,
+.ninja-slice-canvas {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 防止选中 */
+.ninja-fruit,
+.ninja-fruit-half,
+.fruit-emoji,
+.fruit-info-badge {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* ======================
+   移动端适配
+   ====================== */
+@media (max-width: 768px) {
+  .ninja-fruit {
+    width: 100px !important;
+    height: 100px !important;
+  }
+
+  .fruit-emoji {
+    font-size: 80px !important;
+  }
+
+  .ninja-fruit-half .fruit-emoji {
+    font-size: 80px !important;
+  }
+
+  .fruit-info-badge {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+
+  .ninja-score-text {
+    font-size: 36px;
+  }
+}
+
+/* ======================
+   深色模式支持
+   ====================== */
+@media (prefers-color-scheme: dark) {
+  .fruit-info-badge {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+  }
+
+  .fruit-shadow {
+    background: radial-gradient(
+      circle at center,
+      rgba(0, 0, 0, 0.5) 0%,
+      rgba(0, 0, 0, 0.3) 40%,
+      transparent 70%
+    );
+  }
+}
+
+/* ======================
+   特殊水果类型样式
+   ====================== */
+
+/* 西瓜（最大）*/
+.ninja-fruit[data-fruit-type="watermelon"] .fruit-emoji {
+  font-size: 156px;
+}
+
+/* 草莓（最小）*/
+.ninja-fruit[data-fruit-type="strawberry"] .fruit-emoji {
+  font-size: 96px;
+}
+
+/* ======================
+   加载动画（未来使用）
+   ====================== */
+@keyframes fruitBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* ======================
+   防止与页面冲突
+   ====================== */
+.ninja-fruit-container,
+.ninja-fruit,
+.ninja-fruit-half,
+.ninja-juice-particle,
+.ninja-score-text,
+.ninja-slash-effect,
+.ninja-slice-canvas,
+.fruit-shadow,
+.fruit-body,
+.fruit-emoji,
+.fruit-shine,
+.fruit-info-badge {
+  /* 重置所有可能冲突的样式 */
+  margin: 0 !important;
+  padding: 0;
+  border: none;
+  background-clip: border-box;
+  box-sizing: border-box;
+}
+
+/* 确保最高优先级 */
+.ninja-fruit-container * {
+  pointer-events: none !important;
+}

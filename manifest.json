@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "Memory Ninja - 内存忍者",
+  "version": "2.4.2",
+  "description": "水果忍者风格释放闲置标签页内存，真实的物理引擎和3D视觉效果",
+
+  "permissions": [
+    "tabs",
+    "storage",
+    "idle"
+  ],
+
+  "host_permissions": [
+    "<all_urls>"
+  ],
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "web_accessible_resources": [
+    {
+      "resources": ["sounds/*.mp3", "sounds/*.wav"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Ninja - 控制面板</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 360px;
+      min-height: 480px;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 4px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .header .emoji {
+      font-size: 48px;
+      margin-bottom: 8px;
+    }
+
+    .header .subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .stats {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .stats h2 {
+      font-size: 16px;
+      margin-bottom: 12px;
+      opacity: 0.9;
+    }
+
+    .stat-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-item:last-child {
+      border-bottom: none;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .stat-value.highlight {
+      color: #00ff88;
+      text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+    }
+
+    .controls {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .controls h2 {
+      font-size: 16px;
+      margin-bottom: 12px;
+      opacity: 0.9;
+    }
+
+    .button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      backdrop-filter: blur(10px);
+    }
+
+    .button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+    .button.primary {
+      background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+      color: #1a1a1a;
+    }
+
+    .button.primary:hover {
+      background: linear-gradient(135deg, #00ff88 0%, #00dd77 100%);
+    }
+
+    .button.danger {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    }
+
+    .button.danger:hover {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ff7979 100%);
+    }
+
+    .settings {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .settings h2 {
+      font-size: 16px;
+      margin-bottom: 12px;
+      opacity: 0.9;
+    }
+
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .setting-item:last-child {
+      border-bottom: none;
+    }
+
+    .setting-label {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    .toggle {
+      position: relative;
+      width: 48px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .toggle.active {
+      background: #00ff88;
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+
+    .toggle.active::after {
+      transform: translateX(24px);
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .input-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .input-field {
+      width: 60px;
+      padding: 6px 10px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 6px;
+      color: white;
+      font-size: 14px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .input-field:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.3);
+      border-color: #00ff88;
+    }
+
+    .input-field::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .input-unit {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    .button-small {
+      padding: 6px 12px;
+      margin: 0;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    .status {
+      padding: 8px;
+      margin-top: 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      text-align: center;
+      background: rgba(0, 255, 136, 0.2);
+      display: none;
+    }
+
+    .status.show {
+      display: block;
+      animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="emoji">🥷🍎</div>
+    <h1>Memory Ninja</h1>
+    <div class="subtitle">内存忍者 - 用水果忍者的方式释放内存</div>
+  </div>
+
+  <div class="stats">
+    <h2>📊 统计数据</h2>
+    <div class="stat-item">
+      <span class="stat-label">已释放标签页</span>
+      <span class="stat-value highlight" id="tabsDiscarded">0</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">切割成功</span>
+      <span class="stat-value highlight" id="fruitsSliced">0</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">释放内存（估算）</span>
+      <span class="stat-value" id="memoryFreed">0 MB</span>
+    </div>
+  </div>
+
+  <div class="controls">
+    <h2>🎮 控制</h2>
+    <button class="button primary" id="manualCheck">立即检查闲置标签</button>
+    <button class="button" id="resetStats">重置统计数据</button>
+  </div>
+
+  <div class="settings">
+    <h2>⚙️ 设置</h2>
+    <div class="setting-item">
+      <span class="setting-label">启用监控</span>
+      <div class="toggle active" id="toggleEnabled"></div>
+    </div>
+    <div class="setting-item">
+      <span class="setting-label">闲置阈值</span>
+      <div class="input-group">
+        <div class="input-wrapper">
+          <input
+            type="number"
+            id="idleThresholdInput"
+            class="input-field"
+            min="1"
+            max="1440"
+            value="15"
+            placeholder="15"
+          />
+          <span class="input-unit">分钟</span>
+        </div>
+        <button class="button button-small primary" id="applyThreshold">应用</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <div class="footer">
+    v2.0.0 - Fruit Ninja Edition | Made with ❤️ by Memory Ninja Team
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
